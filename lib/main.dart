@@ -1,77 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:getxsample/controller.dart';
+import 'package:getxsample/second.dart';
 
 void main() {
+  // Get.put(MyController());
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: '/home',
+      getPages: [
+        GetPage(name: '/home', page: () => MyHomePage()),
+        GetPage(name: '/second', page: () => SecondScreen())
+      ],
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({
+    super.key,
+  });
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final ConterController conterController = Get.put(ConterController());
+  //Get.put(CounterController()) registers the controller, making it available for use.
+  final MyController conterContrller = Get.put(MyController());
+  final ColorController colorcontroller = Get.put(ColorController());
+  // final MyController mycontroller = Get.find();
 
-  void _incrementCounter() {
-    setState(() {
-      
-      _counter++;
-    });
-  }
+  // int _counter = 0;
+
+  // void _incrementCounter() {
+  //   setState(() {
+
+  //     _counter++;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-   
-    return Scaffold(
-      appBar: AppBar(
-        
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        
-        title: Text(widget.title),
-      ),
-      body: Center(
-    
-        child: Column(
-          
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return Obx(() {
+      return Scaffold(
+        backgroundColor: colorcontroller.scaffoldcolor.value,
+        appBar: AppBar(
+          backgroundColor: colorcontroller.barcolor.value,
+          title: const Text("GetX demo"),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+        body: Center(
+            child: Column(
+          children: [
+            Obx(() {
+              return Text(
+                'Counter: ${conterController.count}',
+                style: const TextStyle(fontSize: 24),
+              );
+            }),
+            ElevatedButton(
+                onPressed: () {
+                  conterContrller.printHello();
+                },
+                child: const Text('GetX')),
+            ElevatedButton(
+                onPressed: colorcontroller.changeColor,
+                child: Text('change color')),
+            ElevatedButton(
+                onPressed: colorcontroller.changebarColor,
+                child: Text('Appbar color')),
+            ElevatedButton(
+                onPressed: () {
+                  Get.toNamed('/second');
+                },
+                child: Text('second Screen'))
+          ],
+        )),
+        floatingActionButton: FloatingActionButton(
+          onPressed: conterController.increment,
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ),
+      );
+    });
   }
 }
