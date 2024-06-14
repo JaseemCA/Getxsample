@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/home',
       getPages: [
-        GetPage(name: '/home', page: () => MyHomePage()),
-        GetPage(name: '/second', page: () => SecondScreen())
+        GetPage(name: '/home', page: () => const MyHomePage()),
+        GetPage(name: '/second', page: () => const SecondScreen())
       ],
     );
   }
@@ -88,7 +88,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Get.toNamed('/second');
                 },
-                child: Text('second Screen'))
+                child: Text('second Screen')),
+            ElevatedButton(
+                onPressed: () {
+                  Get.snackbar(
+                    "snackbar",
+                    'Snack message',
+                    snackPosition: SnackPosition.TOP,
+                    colorText: Colors.amber,
+                    backgroundColor: Colors.black,
+                    borderRadius: 30,
+                    animationDuration: Duration(seconds: 5),
+                    backgroundGradient:
+                        LinearGradient(colors: [Colors.white, Colors.green]),
+                    isDismissible: true,
+                  );
+                },
+                child: const Text('Snack bar')),
+            ElevatedButton(
+                onPressed: () {
+                  Get.defaultDialog();
+                  },
+                child: Text('Show dialog')),
           ],
         )),
         floatingActionButton: FloatingActionButton(
